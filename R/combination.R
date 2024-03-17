@@ -1,4 +1,3 @@
-# Hello, world!
 #   http://r-pkgs.had.co.nz/
 combination <- function(ma=c("冀豆12","冀豆17"),
                         pa=c("中联豆6001","中联豆6024","中联豆6033")
@@ -23,7 +22,7 @@ ID_prefix<-function(){
   return(onlyID)
 }
 #
-ID_suffix<-function(n1=1,n2=99999){
+ID_suffix5<-function(n1=1,n2=99999){
   id1<-paste("0000",1:9,sep="")
   id2<-paste("000",10:99,sep="")
   id3<-paste("00",100:999,sep="")
@@ -35,6 +34,12 @@ ID_suffix<-function(n1=1,n2=99999){
     return(re_v)}else{
     return(NA)
   }
+}
+get_ID<-function(n1=1,n2=6){
+    my_id_prefix<-ID_prefix()
+    my_id_sufix<-ID_suffix5(n1,n2)
+    re_v<-paste(my_id_prefix, my_id_sufix,sep="")
+    return(re_v)
 }
 
 ID_suffix3<-function(n1=1,n2=999){
@@ -57,11 +62,33 @@ get_computer_nodename<-function(){
 }
 
 #获得prefix_linename
-get_prefix_linename<-function(prefix="ZJ",n1=1,n2=10){
+get_prefix_linename<-function(prefix="ZJ",n1=1,n2=6){
   re_v<-paste(prefix,ID_suffix3(n1,n2),sep="")
   return(re_v)
 }
 
+get_combination<-function(
+    ma=c("冀豆12","冀豆17"),
+    pa=c("中联豆6001","中联豆6024","中联豆6033"),
+    prefix="ZJ",
+    startN=1
+  ){
+  mapa<-combination(ma,pa)
+  my_len<-length(mapa)
+  user<-get_computer_nodename()
+  name<-get_prefix_linename(prefix=prefix,n1=startN,n2=my_len+startN-1)
+  id<-get_ID(1,my_len)
+  re_v<-data.frame(
+    id=id,
+    user=rep(user,my_len),
+    name=name,
+    mapa=mapa
+  )
+  re_v$stage<-100
+  re_v$next_stage<-101
+  re_v$f<-0
+  return(re_v)
+}
 
 
 
