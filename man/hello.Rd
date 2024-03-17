@@ -1,12 +1,12 @@
-\name{hello}
-\alias{hello}
-\title{Hello, World!}
+\name{combination}
+\alias{combination}
+\title{use it to prepare combination!}
 \usage{
-hello()
+combination()
 }
 \description{
-Prints 'Hello, world!'.
+use it to prepare combination.
 }
 \examples{
-hello()
+combination()
 }
