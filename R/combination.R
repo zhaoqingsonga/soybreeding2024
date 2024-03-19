@@ -67,13 +67,46 @@ get_prefix_linename<-function(prefix="ZJ",n1=1,n2=6){
   return(re_v)
 }
 
-get_combination<-function(
-    ma=c("冀豆12","冀豆17"),
-    pa=c("中联豆6001","中联豆6024","中联豆6033"),
+# get_combination<-function(
+#     ma=c("冀豆12","冀豆17"),
+#     pa=c("中联豆6001","中联豆6024","中联豆6033"),
+#     prefix="ZJ",
+#     startN=1
+#   ){
+#   mapa<-combination(ma,pa)
+#   my_len<-length(mapa)
+#   user<-get_computer_nodename()
+#   name<-get_prefix_linename(prefix=prefix,n1=startN,n2=my_len+startN-1)
+#   id<-get_ID(1,my_len)
+#   re_v<-data.frame(
+#     id=id,
+#     user=rep(user,my_len),
+#     name=name,
+#     mapa=mapa
+#   )
+#   re_v$stage<-"杂交"
+#   re_v$next_stage<-"群体"
+#   re_v$f<-0
+#   re_v$process<-id
+#   return(re_v)
+# }
+#----
+get_combination_list<-function(
+    mylist=list(
+    com1=list(ma=c("冀豆12","冀豆17"),
+              pa=c("中联豆6001","中联豆6024","中联豆6033")),
+    com2=list(ma=c("冀豆15","冀豆20"),
+              pa=c("中联豆6001","中联豆6024","中联豆6033"))
+    ),
     prefix="ZJ",
-    startN=1
-  ){
-  mapa<-combination(ma,pa)
+    startN=1,
+    only=FALSE
+){
+  mapa<-NULL
+  for(i in 1:length(mylist)){
+    mapa<-c(mapa,combination(mylist[[i]]$ma,mylist[[i]]$pa))
+  }
+  if(only){mapa<-mapa[!duplicated(mapa)]}
   my_len<-length(mapa)
   user<-get_computer_nodename()
   name<-get_prefix_linename(prefix=prefix,n1=startN,n2=my_len+startN-1)
@@ -84,9 +117,10 @@ get_combination<-function(
     name=name,
     mapa=mapa
   )
-  re_v$stage<-100
-  re_v$next_stage<-101
+  re_v$stage<-"杂交"
+  re_v$next_stage<-"群体"
   re_v$f<-0
+  re_v$process<-id
   return(re_v)
 }
 
