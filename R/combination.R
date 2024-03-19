@@ -113,17 +113,18 @@ get_combination_list<-function(
   user<-get_computer_nodename()
   name<-get_prefix_linename(prefix=prefix,n1=startN,n2=my_len+startN-1)
   id<-get_ID(1,my_len)
+  f<-rep("F0",my_len)
   re_v<-data.frame(
     id=id,
     user=rep(user,my_len),
-    name=name
+    name=name,
+    f=f
   )
   re_v<-cbind(re_v,mapa)
   re_v$stage<-"杂交"
   re_v$next_stage<-"群体"
-  re_v$f<-0
   #re_v$process<-id
-  return(re_v[,-4:-5])
+  return(re_v[-5:-6])
 }
 
 
