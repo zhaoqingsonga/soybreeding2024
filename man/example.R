@@ -2,20 +2,28 @@
 #devtools::install_github("zhaoqingsonga/soybreeding2024",force=TRUE)
 library(soybreeding2024)
 
-mydata<-get_combination_list(
-  list(
-    list(ma=c("冀豆1","冀豆2"),pa=c("中联豆6001","中联豆6024","中联豆6033"),memo="中联豆6001蛋白含量23%"),#第一组
-    list(ma=c("冀豆3","冀豆4"),pa=c("中联豆6001","中联豆6024","中联豆6033"), memo="高油"),#第二组
-    list(ma=c("冀豆5","冀豆6"),pa=c("中联豆6001","中联豆6024","中联豆6033"), memo="高异黄酮"),  #第三组
-    list(ma=c("冀豆2","冀豆19"),pa=c("中联豆6001","中联豆6024","中联豆6033"), memo="高产")  #第四组， 以此类推
-    ),
-  prefix="ZJ24",#前缀
-  startN = 1,
-  only=TRUE#是否去除重复的组合
-)
-mydata
+com1<-get_combination(ma=c("沧豆4号","邯豆16","冀豆32","冀豆33"),
+                      pa=c("中联豆6888","中联豆6024","中联豆6033"),
+                      memo="高油")
+
+com2<-get_combination(c("冀豆2","冀豆17"),
+                      c("中联豆6001","中联豆6024","中联豆6033"),
+                      "转基因")
+com3<-get_combination(c("冀豆2","冀豆17"),
+                      c("中联豆6001","中联豆6024","中联豆6033"),
+                      "转基因")
+
+
+mycombi<-combi_bind(com1,com2,com3,prefix="ZJ24")
+mycombi
+
+
+
 library(openxlsx)
 wb<-createWorkbook()
 addWorksheet(wb,"combination")
-writeData(wb,"combination",mydata)
+writeData(wb,"combination",mycombi)
 openXL(wb)
+
+
+

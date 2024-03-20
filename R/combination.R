@@ -60,31 +60,9 @@ get_prefix_linename<-function(prefix="ZJ",n1=1,n2=6){
   re_v<-paste(prefix,ID_suffix3(n1,n2),sep="")
   return(re_v)
 }
+#添加名称
 
-# get_combination<-function(
-#     ma=c("冀豆12","冀豆17"),
-#     pa=c("中联豆6001","中联豆6024","中联豆6033"),
-#     prefix="ZJ",
-#     startN=1
-#   ){
-#   mapa<-combination(ma,pa)
-#   my_len<-length(mapa)
-#   user<-get_computer_nodename()
-#   name<-get_prefix_linename(prefix=prefix,n1=startN,n2=my_len+startN-1)
-#   id<-get_ID(1,my_len)
-#   re_v<-data.frame(
-#     id=id,
-#     user=rep(user,my_len),
-#     name=name,
-#     mapa=mapa
-#   )
-#   re_v$stage<-"杂交"
-#   re_v$next_stage<-"群体"
-#   re_v$f<-0
-#   re_v$process<-id
-#   return(re_v)
-# }
-#----
+
 get_combination_list<-function(
     mylist=list(
     com1=list(ma=c("冀豆12","冀豆17"),
@@ -124,10 +102,47 @@ get_combination_list<-function(
   re_v$stage<-"杂交"
   re_v$next_stage<-"群体"
   #re_v$process<-id
-  return(re_v[-5:-6])
+  return(re_v)
 }
 
-
+get_combination<-function(ma=c("JD12","JD17"),
+                          pa=c("ZJD6001","ZJD6024"),
+                          memo=NA,
+                          prefix="ZJ",
+                          startN=1
+)
+{
+  mapa<-combination(ma,pa)
+  mapa$memo=memo
+  my_len<-length(mapa$mapa)
+  user<-get_computer_nodename()
+  name<-get_prefix_linename(prefix=prefix,n1=startN,n2=my_len+startN-1)
+  id<-get_ID(1,my_len)
+  f<-rep("F0",my_len)
+  re_v<-data.frame(
+    id=id,
+    user=rep(user,my_len),
+    name=name,
+    f=f
+  )
+  re_v<-cbind(re_v,mapa)
+  re_v$stage<-"杂交"
+  re_v$next_stage<-"群体"
+  #re_v$process<-id
+  return(re_v)
+}
+##
+combi_bind <- function(...,prefix="ZJ",only=TRUE,order=FALSE){
+  # 在函数内部，你可以通过...来访问不定参数
+  arg <- list(...)
+  rev<-do.call(rbind,arg)
+  if(only) rev<-rev[!duplicated(rev$mapa),]
+  if(order) {
+    rev<-rev[order(rev$mapa),]
+  }
+  rev$name<-get_prefix_linename(prefix,n2=nrow(rev))
+  return(rev)
+}
 
 
 
