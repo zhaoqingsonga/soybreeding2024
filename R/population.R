@@ -33,7 +33,7 @@ get_population <- function(my_combi, prefix = "QT24") {
   return(re_v)
 }
 
-# my_pop <- get_population(my_combi)
+# my_pop <- get_population(my_combi,prefix="QT25")
 # my_pop
 #
 #

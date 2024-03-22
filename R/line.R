@@ -14,7 +14,7 @@ get_line <- function(my_plant, prefix = "ZH") {
       digits = 4
     )
   my_line$stage <- "株行"
-  my_line$next_stage <- "初比"
+  my_line$next_stage <- "初级产比"
   my_line$f <- my_line$f + 1
   my_line$sele <- 5
   my_line$process <- paste(my_line$process, my_line$id, sep = "/")
@@ -23,5 +23,5 @@ get_line <- function(my_plant, prefix = "ZH") {
   return(my_line)
 }
 
-# my_line <- get_line(my_plant, prefix = "24ZH")
+# my_line <- get_line(my_plant, prefix = "ZH26")
 # my_line

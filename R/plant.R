@@ -1,4 +1,4 @@
-get_plant <- function(my_pop) {
+get_plant <- function(my_pop,prefix="DZ") {
   new_df <- data.frame()
   # 循环遍历每一行，并按给定的次数复制
   for (i in 1:nrow(my_pop)) {
@@ -19,7 +19,7 @@ get_plant <- function(my_pop) {
   new_df$id <- get_ID(n1 = 1, n2 = nrow(new_df))
   new_df$stageid <-
     get_prefix_linename(
-      prefix = "DZ",
+      prefix = prefix,
       n1 = 1,
       n2 = nrow(new_df),
       digits = 4
@@ -32,7 +32,7 @@ get_plant <- function(my_pop) {
   return(new_df)
 }
 
-# my_plant <- get_plant(my_pop)
+# my_plant <- get_plant(my_pop,prefix="DZ25")
 # my_plant
-#
+
 
