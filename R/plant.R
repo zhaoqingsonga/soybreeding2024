@@ -1,4 +1,5 @@
 get_plant <- function(my_pop,prefix="DZ") {
+  my_pop<-subset(my_pop,my_pop$sele>0)
   new_df <- data.frame()
   # 循环遍历每一行，并按给定的次数复制
   for (i in 1:nrow(my_pop)) {
@@ -28,7 +29,7 @@ get_plant <- function(my_pop,prefix="DZ") {
 
   new_df$next_stage <- "株行"
   new_df$process <- paste(new_df$process, new_df$id, sep = "/")
-
+  new_df$sele<-NA
   return(new_df)
 }
 

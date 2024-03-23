@@ -39,7 +39,8 @@ ID_suffix4 <- function(n1 = 1, n2 = 9999) {
   id3 <- paste("0", 100:999, sep = "")
   id4 <- 1000:9999
   alln <- c(id1, id2, id3, id4)
-  if (is.numeric(n1) & is.numeric(n2) & n2 >= n1 & n1 >= 1 & n2 <= 9999)
+  if (is.numeric(n1) &
+      is.numeric(n2) & n2 >= n1 & n1 >= 1 & n2 <= 9999)
   {
     re_v <- alln[n1:n2]
     return(re_v)
@@ -60,7 +61,8 @@ ID_suffix3 <- function(n1 = 1, n2 = 999) {
   id2 <- paste("0", 10:99, sep = "")
   id3 <- 100:999
   alln <- c(id1, id2, id3)
-  if (is.numeric(n1) & is.numeric(n2) & n2 >= n1 & n1 >= 1 & n2 <= 999)
+  if (is.numeric(n1) &
+      is.numeric(n2) & n2 >= n1 & n1 >= 1 & n2 <= 999)
   {
     re_v <- alln[n1:n2]
     return(re_v)
@@ -153,8 +155,8 @@ get_combination <- function(ma = c("JD12", "JD17"),
   stageid <-
     get_prefix_linename(prefix = prefix,
                         n1 = startN,
-                        n2 = my_len + startN - 1)
-  name <- paste(stageid, "F0", sep = "")
+                        n2 = my_len + startN - 1)#合并时注意，要重新生成
+  name <- paste(stageid, "F0", sep = "")#合并时注意，要重新生成
 
   id <- get_ID(1, my_len)
   f <- rep(0, my_len)
@@ -169,7 +171,7 @@ get_combination <- function(ma = c("JD12", "JD17"),
   re_v$stage <- "杂交"
   re_v$next_stage <- "群体"
   re_v$process <- id
-  re_v$path <- re_v$stageid
+  re_v$path <- re_v$stageid#合并时要重新生成
   return(re_v)
 }
 ##
@@ -179,15 +181,45 @@ combi_bind <- function(...,
                        order = FALSE) {
   # 在函数内部，你可以通过...来访问不定参数
   arg <- list(...)
-  rev <- do.call(rbind, arg)
+  re_v <- do.call(rbind, arg)
   if (only)
-    rev <- rev[!duplicated(rev$mapa), ]
+    re_v <- re_v[!duplicated(re_v$mapa),]
   if (order) {
-    rev <- rev[order(rev$mapa), ]
+    re_v <- re_v[order(re_v$mapa),]
   }
-  rev$name <- get_prefix_linename(prefix, n2 = nrow(rev))
-  return(rev)
+  #合并这两个字段时重命名
+  re_v$stageid <- get_prefix_linename(prefix, n2 = nrow(re_v))
+  re_v$name <- paste(re_v$stageid, "F0", sep = "")
+  re_v$path <- re_v$stageid
+  rownames(re_v)<-NULL
+  return(re_v)
 }
 
 # my_combi <- get_combination(prefix = "ZJ24")
-#
+#组合矩阵
+combination_matrix <- function(my_combi) {
+  ma <- my_combi$ma[!duplicated(my_combi$ma)]
+  pa <- my_combi$pa[!duplicated(my_combi$pa)]
+  mapamatri <-
+    matrix(rep(NA, (length(ma) * length(pa))),
+           nrow = length(ma),
+           ncol = length(pa),
+           byrow = TRUE)
+  rownames(mapamatri) <- ma
+  colnames(mapamatri) <- pa
+
+  for (i in 1:nrow(my_combi)) {
+    if (is.na(mapamatri[my_combi$ma[i], my_combi$pa[i]])) {
+      mapamatri[my_combi$ma[i], my_combi$pa[i]] <- my_combi$stageid[i]
+    } else{
+      mapamatri[my_combi$ma[i], my_combi$pa[i]] <-
+        paste(mapamatri[my_combi$ma[i], my_combi$pa[i]], my_combi$stageid[i], sep =
+                "/")
+    }
+  }
+  mapamatri <- as.data.frame(mapamatri)
+  mapamatri <- cbind(data.frame(母本 = ma), mapamatri)
+  rownames(mapamatri)<-NULL
+  return(mapamatri)
+}
+
