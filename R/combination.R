@@ -10,7 +10,12 @@ combination <- function(ma = c("冀豆12", "冀豆17"),
   return(all_combinations)
 }
 
-
+#' get ID prefix
+#'
+#' @param name description
+#'
+#'
+#'
 ID_prefix <- function() {
   onlyID <- format(Sys.time(), "%Y%m%d%H%M%S")
   return(onlyID)
@@ -194,6 +199,28 @@ combi_bind <- function(...,
   rownames(re_v)<-NULL
   return(re_v)
 }
+
+#'配置杂交组合
+#'
+#' @param filename 文件名，里面包括3列，分别为母本，父本和备注，其它列无要求，文件格式为xlsx.
+#' @param prefix 组合的前缀。
+
+
+get_combination_fromfile<-function(filename,prefix = "ZJ24"){
+  library(openxlsx)
+  mydata<-read.xlsx(filename,1)
+  mylist<-list()
+  for(i in 1:nrow(mydata)){
+    mylist[[i]]<-get_combination(ma=mydata$母本[i],pa=mydata$父本[i],memo=mydata$备注[i])
+  }
+  extra_params<-list(prefix = prefix, only = TRUE,order = FALSE)
+  do.call(combi_bind, c(mylist,extra_params))
+}
+
+
+#'  获得组合矩阵
+#'
+#' @param my_combi data.frame, 里面要有三列数据，分别为 ma, pa, stageid
 
 # my_combi <- get_combination(prefix = "ZJ24")
 #组合矩阵
